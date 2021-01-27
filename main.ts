@@ -1,6 +1,6 @@
 import { App, FuzzySuggestModal, Plugin, FuzzyMatch, Notice, MarkdownView } from 'obsidian';
-import emoji from 'emojilib';
-
+import orderedEmoji from 'unicode-emoji-json/data-ordered-emoji'
+import emojiNames from 'unicode-emoji-json/data-by-emoji'
 
 const indicatorStyle: string =
   'color: var(--text-accent); width: 2.5em; text-align: center; float:left; font-weight:800;';
@@ -17,13 +17,13 @@ export default class MyPlugin extends Plugin {
   
       return sentence.join(' ');
     }
-  
-    let items = emoji.ordered.map((name) => {
+
+    let items = orderedEmoji.map((name: string) => {
       return {
-        name: titleCase(name),
-        char: emoji.lib[name].char,
-      };
-    });
+        name: titleCase(emojiNames[name]["name"]),
+        char: name
+      }
+    })
   
     return items;
   }
