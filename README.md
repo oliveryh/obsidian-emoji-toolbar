@@ -2,7 +2,7 @@
 
 This plugin for [Obsidian](https://obsidian.md/) allows you to quickly search for and add emojis to your editor.
 
-![Emoji Toolbar Plugin](demo/demo.gif)
+![Emoji Toolbar Plugin](https://raw.githubusercontent.com/oliveryh/obsidian-emoji-toolbar/main/demo/demo.gif)
 
 ## Usage
 
@@ -10,9 +10,9 @@ After enabling the plugin, you'll find a new hot key setting called `Emoji Toolb
 
 Start typing a word to filter through the list. You can insert the emoji into the editor by either clicking on it, or use the arrow keys and then press enter to insert the emoji.
 
-## Future features
+## Features
 
-- View emojis by group
+- Twitter emoji formatting for preview and insert modal for improved emoji support. This can be toggled on/off in the Emoji Toolbar settings tab.
 
 ## Install
 
@@ -23,6 +23,3 @@ Start typing a word to filter through the list. You can insert the emoji into th
 3. Click on Community plugins "Browse"
 4. Look for Emoji
 
-## Credit
-
-Credit to darlal and his [Obsidian Switcher Plus plugin](https://github.com/darlal/obsidian-switcher-plus). It was used as a basis for this project
