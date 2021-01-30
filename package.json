@@ -31,6 +31,7 @@
     "obsidian": "https://github.com/obsidianmd/obsidian-api/tarball/master",
     "rollup": "^2.32.1",
     "tslib": "^2.0.3",
+    "twemoji": "^13.0.1",
     "typescript": "^4.0.3",
     "unicode-emoji-json": "^0.2.1"
   }
