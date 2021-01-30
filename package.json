@@ -1,6 +1,6 @@
 {
   "name": "obsidian-emoji-toolbar",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Quickly search for an insert emojis into your editor.",
   "repository": {
     "type": "git",
@@ -28,10 +28,11 @@
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@rollup/plugin-typescript": "^6.0.0",
     "@types/node": "^14.14.2",
-    "emojilib": "^2.4.0",
     "obsidian": "https://github.com/obsidianmd/obsidian-api/tarball/master",
     "rollup": "^2.32.1",
     "tslib": "^2.0.3",
-    "typescript": "^4.0.3"
+    "twemoji": "^13.0.1",
+    "typescript": "^4.0.3",
+    "unicode-emoji-json": "^0.2.1"
   }
 }
