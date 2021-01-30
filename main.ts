@@ -61,12 +61,7 @@ export default class MyPlugin extends Plugin {
     this.addCommand({
 			id: 'open-sample-modal',
       name: 'Open Sample Modal',
-      hotkeys: [
-        {
-          modifiers: ["Mod", "Shift"],
-          key: "o",
-        },
-      ],
+      hotkeys: [],
 			checkCallback: (checking: boolean) => {
 				let leaf = this.app.workspace.activeLeaf;
 				if (leaf) {
