@@ -1,4 +1,4 @@
-import { App, FuzzySuggestModal, Plugin, FuzzyMatch, Notice, MarkdownView, MarkdownPostProcessor, MarkdownPostProcessorContext, MarkdownPreviewRenderer, PluginSettingTab, Setting } from 'obsidian';
+import { App, FuzzySuggestModal, Plugin, FuzzyMatch, MarkdownPostProcessor, MarkdownPostProcessorContext, MarkdownPreviewRenderer, PluginSettingTab, Setting } from 'obsidian';
 import orderedEmoji from 'unicode-emoji-json/data-ordered-emoji'
 import emojiNames from 'unicode-emoji-json/data-by-emoji'
 import twemoji from 'twemoji'
@@ -135,20 +135,8 @@ class EmojiFuzzySuggestModal extends FuzzySuggestModal<EmojiItem> {
     el.insertAdjacentElement('afterbegin', indicatorEl);
   }
 
-  insertTextAtCursor(view: MarkdownView, text:string): void {
-    let editor = view.sourceMode.cmEditor
-    let doc = editor.getDoc();
-    let cursor = doc.getCursor();
-    doc.replaceRange(text, cursor);
-  }
-
   onChooseItem(item: EmojiItem, evt: MouseEvent | KeyboardEvent): void {
-    let activeEditor = this.app.workspace.getActiveViewOfType(MarkdownView)
-    if (activeEditor) {
-      this.insertTextAtCursor(activeEditor, item.char)
-    } else {
-      new Notice("You'll need to open a markdown editor to insert an emoji");
-    }
+    document.execCommand('insertText', false, item.char)
   }
 }
 
