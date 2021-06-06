@@ -2,6 +2,7 @@ import { App, FuzzySuggestModal, Plugin, FuzzyMatch, MarkdownPostProcessor, Mark
 import orderedEmoji from 'unicode-emoji-json/data-ordered-emoji'
 import emojiNames from 'unicode-emoji-json/data-by-emoji'
 import twemoji from 'twemoji'
+import emojicons from 'node-emoji'
 
 const indicatorStyle: string =
   'color: var(--text-accent); width: 2.5em; text-align: center; float:left; font-weight:800;';
@@ -67,6 +68,24 @@ export default class MyPlugin extends Plugin {
 				if (leaf) {
 					if (!checking) {
 						new EmojiFuzzySuggestModal(this.app, this.emojis, this.settings).open();
+					}
+					return true;
+				}
+				return false;
+			}
+		});
+
+    this.addCommand({
+			id: 'emoji-picker:convert-plain-text',
+      name: 'Emojify',
+      hotkeys: [],
+			checkCallback: (checking: boolean) => {
+				let leaf = this.app.workspace.activeLeaf;
+				if (leaf) {
+					if (!checking) {
+            
+            const fileData =leaf.view.data;
+            this.app.vault.modify(this.app.workspace.getActiveFile(),emojicons.emojify(fileData))
 					}
 					return true;
 				}
