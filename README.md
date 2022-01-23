@@ -12,6 +12,9 @@ Start typing a word to filter through the list. You can insert the emoji into th
 
 ## Features
 
+- Skin Tone Support
+- Fuzzy / Semantic Search Matches
+- Select Recently Used Emoji
 - Twitter emoji formatting for preview and insert modal for improved emoji support. This can be toggled on/off in the Emoji Toolbar settings tab.
 
 ## Install
@@ -23,3 +26,9 @@ Start typing a word to filter through the list. You can insert the emoji into th
 3. Click on Community plugins "Browse"
 4. Look for Emoji
 
+# Thanks
+
+- A big thanks to liamcain for producing the [obsidian-react-starter](https://github.com/obsidian-community/obsidian-react-starter
+) which the basis of v0.3.0+ is made from
+- Also to [Emoji Mart](https://github.com/missive/emoji-mart
+)
