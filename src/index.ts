@@ -5,6 +5,11 @@ import twemoji from 'twemoji'
 
 import EmojiToolbar from './ui/EmojiToolbar';
 
+const DEF_DELAY = 1000;
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
+}
+
 class EmojiModal extends Modal {
   private div: HTMLElement;
   private reactComponent: React.ReactElement;
@@ -12,8 +17,9 @@ class EmojiModal extends Modal {
   constructor(app: App, theme: str) {
     super(app)
     this.reactComponent = React.createElement(EmojiToolbar, {
-      "onSelect": (emoji) => {
+      "onSelect": async (emoji: any) => {
         this.close()
+        await sleep(10)
         document.execCommand('insertText', false, emoji.native)
       },
       "onClose": () => {
