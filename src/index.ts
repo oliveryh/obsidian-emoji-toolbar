@@ -1,20 +1,29 @@
-import { App, MarkdownPostProcessor, MarkdownPreviewRenderer, Modal, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, MarkdownPostProcessor, editor,MarkdownPreviewRenderer, Modal, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
 import React from "react";
 import ReactDOM from "react-dom";
 import twemoji from 'twemoji'
 
 import EmojiToolbar from './ui/EmojiToolbar';
 
+function inserText(editor:editor,text: string) {
+  if (text.length === 0 || text==null) return;
+  const cursor = editor.getCursor('from');
+  editor.replaceRange(text, cursor, cursor);
+   app.commands.executeCommandById("editor:focus");
+   app.workspace.activeLeaf.view.editor.exec("goRight");
+}
+
 class EmojiModal extends Modal {
   private div: HTMLElement;
   private reactComponent: React.ReactElement;
 
-  constructor(app: App, theme: str) {
+  constructor(app: App, theme: str,editor:editor) {
     super(app)
     this.reactComponent = React.createElement(EmojiToolbar, {
       "onSelect": (emoji) => {
         this.close()
-        document.execCommand('insertText', false, emoji.native)
+      //  document.execCommand('insertText', false, emoji.native)
+      inserText(editor, emoji.native);
       },
       "onClose": () => {
         this.close()
@@ -74,7 +83,10 @@ export default class EmojiPickerPlugin extends Plugin {
           if (!checking) {
             try {
               const theme = this.app.getTheme() === 'moonstone' ? 'light' : 'dark'
-              const myModal = new EmojiModal(this.app, theme);
+              let view = this.app.workspace.getActiveViewOfType(obsidian.MarkdownView);
+              if (!view){return;};
+              const  cmEditor = view.editor;
+              const myModal = new EmojiModal(this.app, theme,cmEditor);
               myModal.open()
               document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].focus()
               document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].select()
