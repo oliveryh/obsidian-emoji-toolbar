@@ -43,11 +43,11 @@ class EmojiModal extends Modal {
 }
 
 interface MyPluginSettings {
-  twemojiActive: boolean;
+  twitterEmojiActive: boolean;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  twemojiActive: true
+  twitterEmojiActive: false
 }
 
 export default class EmojiPickerPlugin extends Plugin {
@@ -66,7 +66,7 @@ export default class EmojiPickerPlugin extends Plugin {
 
     this.addSettingTab(new SettingsTab(this.app, this));
 
-    if (this.settings.twemojiActive) {
+    if (this.settings.twitterEmojiActive) {
       MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor)
     }
 
@@ -124,12 +124,12 @@ class SettingsTab extends PluginSettingTab {
     containerEl.createEl('h2', {text: 'Settings'})
 
     new Setting(containerEl)
-      .setName('Twitter Emoji')
-      .setDesc('Improved emoji support. Note: this applies to emoji search and preview only.')
+      .setName('Twitter Emoji (v13)')
+      .setDesc('Improved emoji support, but may cause unexpected behavior.')
       .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.twemojiActive)
+        .setValue(this.plugin.settings.twitterEmojiActive)
         .onChange(async (value) => {
-          this.plugin.settings.twemojiActive = value
+          this.plugin.settings.twitterEmojiActive = value
           await this.plugin.saveSettings()
           if (value) {
             MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor)
