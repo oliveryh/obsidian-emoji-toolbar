@@ -20,6 +20,7 @@ class EmojiToolbar extends React.Component {
         <NimblePicker
           onSelect={this.props.onSelect}
           autoFocus={true}
+          native={this.props.isNative}
           set='twitter'
           data={twitterData}
           theme={this.props.theme}
