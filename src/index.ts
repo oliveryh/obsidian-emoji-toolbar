@@ -14,7 +14,7 @@ class EmojiModal extends Modal {
   private div: HTMLElement;
   private reactComponent: React.ReactElement;
 
-  constructor(app: App, theme: str) {
+  constructor(app: App, theme: str, isNative: boolean) {
     super(app)
     this.reactComponent = React.createElement(EmojiToolbar, {
       "onSelect": async (emoji: any) => {
@@ -26,6 +26,7 @@ class EmojiModal extends Modal {
         this.close()
       },
       "theme": theme,
+      "isNative": isNative,
     })
   }
 
@@ -80,7 +81,8 @@ export default class EmojiPickerPlugin extends Plugin {
           if (!checking) {
             try {
               const theme = this.app.getTheme() === 'moonstone' ? 'light' : 'dark'
-              const myModal = new EmojiModal(this.app, theme);
+              const isNative = !this.settings.twitterEmojiActive
+              const myModal = new EmojiModal(this.app, theme, isNative);
               myModal.open()
               document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].focus()
               document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].select()
