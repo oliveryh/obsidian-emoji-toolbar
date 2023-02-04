@@ -14,7 +14,7 @@ class EmojiModal extends Modal {
   private div: HTMLElement;
   private reactComponent: React.ReactElement;
 
-  constructor(app: App, theme: str) {
+  constructor(app: App, theme: str, isNative: boolean) {
     super(app)
     this.reactComponent = React.createElement(EmojiToolbar, {
       "onSelect": async (emoji: any) => {
@@ -26,6 +26,7 @@ class EmojiModal extends Modal {
         this.close()
       },
       "theme": theme,
+      "isNative": isNative,
     })
   }
 
@@ -43,11 +44,11 @@ class EmojiModal extends Modal {
 }
 
 interface MyPluginSettings {
-  twemojiActive: boolean;
+  twitterEmojiActive: boolean;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  twemojiActive: true
+  twitterEmojiActive: false
 }
 
 export default class EmojiPickerPlugin extends Plugin {
@@ -66,7 +67,7 @@ export default class EmojiPickerPlugin extends Plugin {
 
     this.addSettingTab(new SettingsTab(this.app, this));
 
-    if (this.settings.twemojiActive) {
+    if (this.settings.twitterEmojiActive) {
       MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor)
     }
 
@@ -80,7 +81,8 @@ export default class EmojiPickerPlugin extends Plugin {
           if (!checking) {
             try {
               const theme = this.app.getTheme() === 'moonstone' ? 'light' : 'dark'
-              const myModal = new EmojiModal(this.app, theme);
+              const isNative = !this.settings.twitterEmojiActive
+              const myModal = new EmojiModal(this.app, theme, isNative);
               myModal.open()
               document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].focus()
               document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].select()
@@ -124,12 +126,12 @@ class SettingsTab extends PluginSettingTab {
     containerEl.createEl('h2', {text: 'Settings'})
 
     new Setting(containerEl)
-      .setName('Twitter Emoji')
-      .setDesc('Improved emoji support. Note: this applies to emoji search and preview only.')
+      .setName('Twitter Emoji (v13)')
+      .setDesc('Improved emoji support, but may cause unexpected behavior.')
       .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.twemojiActive)
+        .setValue(this.plugin.settings.twitterEmojiActive)
         .onChange(async (value) => {
-          this.plugin.settings.twemojiActive = value
+          this.plugin.settings.twitterEmojiActive = value
           await this.plugin.saveSettings()
           if (value) {
             MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor)
