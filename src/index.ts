@@ -1,4 +1,4 @@
-import { App, MarkdownPostProcessor, MarkdownPreviewRenderer, Modal, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, MarkdownPostProcessor, MarkdownPreviewRenderer, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Editor } from "obsidian";
 import React from "react";
 import ReactDOM from "react-dom";
 import twemoji from 'twemoji'
@@ -10,17 +10,25 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
 }
 
+function insertText(editor: Editor, text: string) {
+  if (text.length === 0 || text==null) return
+  const cursor = editor.getCursor('from')
+  editor.replaceRange(text, cursor, cursor)
+  app.commands.executeCommandById("editor:focus")
+  app.workspace.activeLeaf.view.editor.exec("goRight")
+}
+
 class EmojiModal extends Modal {
   private div: HTMLElement;
   private reactComponent: React.ReactElement;
 
-  constructor(app: App, theme: str, isNative: boolean) {
+  constructor(app: App, theme: str, isNative: boolean, editor: Editor) {
     super(app)
     this.reactComponent = React.createElement(EmojiToolbar, {
-      "onSelect": async (emoji: any) => {
+      "onSelect": async (emoji) => {
         this.close()
         await sleep(10)
-        document.execCommand('insertText', false, emoji.native)
+        insertText(editor, emoji.native)
       },
       "onClose": () => {
         this.close()
@@ -82,7 +90,9 @@ export default class EmojiPickerPlugin extends Plugin {
             try {
               const theme = this.app.getTheme() === 'moonstone' ? 'light' : 'dark'
               const isNative = !this.settings.twitterEmojiActive
-              const myModal = new EmojiModal(this.app, theme, isNative);
+              const view = this.app.workspace.getActiveViewOfType(MarkdownView)
+              if (!view){ return }
+              const myModal = new EmojiModal(this.app, theme, isNative, view.editor)
               myModal.open()
               document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].focus()
               document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].select()
