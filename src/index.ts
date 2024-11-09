@@ -1,7 +1,18 @@
-import { App, MarkdownPostProcessor, MarkdownPreviewRenderer, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Editor } from "obsidian";
+import { 
+  App, 
+  MarkdownPostProcessor, 
+  MarkdownPreviewRenderer, 
+  MarkdownView, 
+  Modal, 
+  Notice, 
+  Plugin, 
+  PluginSettingTab, 
+  Setting, 
+  Editor 
+} from "obsidian";
 import React from "react";
 import ReactDOM from "react-dom";
-import twemoji from 'twemoji'
+import twemoji from 'twemoji';
 
 import EmojiToolbar from './ui/EmojiToolbar';
 
@@ -11,42 +22,42 @@ function sleep(ms: number) {
 }
 
 function insertText(editor: Editor, text: string) {
-  if (text.length === 0 || text==null) return
-  const cursor = editor.getCursor('from')
-  editor.replaceRange(text, cursor, cursor)
-  app.commands.executeCommandById("editor:focus")
-  app.workspace.activeLeaf.view.editor.exec("goRight")
+  if (text.length === 0 || text == null) return;
+  const cursor = editor.getCursor('from');
+  editor.replaceRange(text, cursor, cursor);
+  editor.focus();
 }
 
 class EmojiModal extends Modal {
   private div: HTMLElement;
   private reactComponent: React.ReactElement;
 
-  constructor(app: App, theme: str, isNative: boolean, editor: Editor) {
-    super(app)
+  constructor(app: App, theme: 'light' | 'dark', isNative: boolean, editor: Editor) {
+    super(app);
     this.reactComponent = React.createElement(EmojiToolbar, {
-      "onSelect": async (emoji) => {
-        this.close()
-        await sleep(10)
-        insertText(editor, emoji.native)
+      onSelect: async (emoji: { native: string }) => {
+        this.close();
+        await sleep(10);
+        insertText(editor, emoji.native);
       },
-      "onClose": () => {
-        this.close()
+      onClose: () => {
+        this.close();
       },
-      "theme": theme,
-      "isNative": isNative,
-    })
+      theme: theme,
+      isNative: isNative,
+    });
   }
 
   async onOpen() {
-    this.titleEl.empty()
-    this.modalEl.id = 'emoji-modal'
+    this.titleEl.empty();
+    this.modalEl.id = 'emoji-modal';
     const { contentEl } = this;
-    ReactDOM.render(this.reactComponent, contentEl)
+    ReactDOM.render(this.reactComponent, contentEl);
   }
 
   onClose() {
     const { contentEl } = this;
+    ReactDOM.unmountComponentAtNode(contentEl);
     contentEl.empty();
   }
 }
@@ -66,46 +77,41 @@ export default class EmojiPickerPlugin extends Plugin {
   public static postprocessor: MarkdownPostProcessor = (
     el: HTMLElement,
   ) => {
-    twemoji.parse(el)
+    twemoji.parse(el);
   }
 
   async onload(): Promise<void> {
-
-    await this.loadSettings()
+    await this.loadSettings();
 
     this.addSettingTab(new SettingsTab(this.app, this));
 
     if (this.settings.twitterEmojiActive) {
-      MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor)
+      MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor);
     }
 
     this.addCommand({
       id: 'emoji-picker:open-picker',
       name: 'Open emoji picker',
-      hotkeys: [],
       checkCallback: async (checking: boolean) => {
         const leaf = this.app.workspace.activeLeaf;
         if (leaf) {
           if (!checking) {
             try {
-              const theme = this.app.getTheme() === 'moonstone' ? 'light' : 'dark'
-              const isNative = !this.settings.twitterEmojiActive
-              const view = this.app.workspace.getActiveViewOfType(MarkdownView)
-              if (!view){ return }
-              const myModal = new EmojiModal(this.app, theme, isNative, view.editor)
-              myModal.open()
-              document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].focus()
-              document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].select()
-            }
-            catch (e) {
-              new Notice(e.message)
+              const theme = this.app.getTheme() === 'moonstone' ? 'light' : 'dark';
+              const isNative = !this.settings.twitterEmojiActive;
+              const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+              if (!view) return;
+              const myModal = new EmojiModal(this.app, theme, isNative, view.editor);
+              myModal.open();
+            } catch (e) {
+              new Notice(e.message);
             }
           }
           return true;
         }
         return false;
       }
-    })
+    });
   }
 
   async loadSettings() {
@@ -126,14 +132,14 @@ class SettingsTab extends PluginSettingTab {
   }
 
   display(): void {
-    const { containerEl } = this
+    const { containerEl } = this;
 
-    containerEl.empty()
+    containerEl.empty();
 
-    containerEl.createEl('h1', {text: 'Emoji Toolbar'})
-    containerEl.createEl('a', {text: 'Created by oliveryh', href: 'https://github.com/oliveryh/'})
+    containerEl.createEl('h1', {text: 'Emoji Toolbar'});
+    containerEl.createEl('a', {text: 'Created by oliveryh', href: 'https://github.com/oliveryh/'});
 
-    containerEl.createEl('h2', {text: 'Settings'})
+    containerEl.createEl('h2', {text: 'Settings'});
 
     new Setting(containerEl)
       .setName('Twitter Emoji (v13)')
@@ -141,12 +147,12 @@ class SettingsTab extends PluginSettingTab {
       .addToggle(toggle => toggle
         .setValue(this.plugin.settings.twitterEmojiActive)
         .onChange(async (value) => {
-          this.plugin.settings.twitterEmojiActive = value
-          await this.plugin.saveSettings()
+          this.plugin.settings.twitterEmojiActive = value;
+          await this.plugin.saveSettings();
           if (value) {
-            MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor)
+            MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor);
           } else {
-            MarkdownPreviewRenderer.unregisterPostProcessor(EmojiPickerPlugin.postprocessor)
+            MarkdownPreviewRenderer.unregisterPostProcessor(EmojiPickerPlugin.postprocessor);
           }
         }));
   }

@@ -23,9 +23,11 @@
     "test:watch": "yarn test -- --watch"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@types/react": "17.0.3",
     "@types/react-dom": "17.0.2",
-    "emoji-mart": "git+https://github.com/oliveryh/emoji-mart.git#v3.1.1",
+    "emoji-mart": "^5.6.0",
     "obsidian": "obsidianmd/obsidian-api#master",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -51,7 +53,7 @@
     "@typescript-eslint/parser": "4.17.0",
     "babel": "6.23.0",
     "eslint": "7.22.0",
-    "rollup": "2.41.2",
+    "rollup": "^2.79.2",
     "rollup-plugin-postcss": "^4.0.2",
     "typescript": "4.2.3"
   }
