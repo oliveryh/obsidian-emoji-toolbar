@@ -1,33 +1,39 @@
 import * as React from "react";
-import { NimblePicker } from 'emoji-mart'
-import twitterData from 'emoji-mart/data/twitter.json'
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 
-class EmojiToolbar extends React.Component {
-  constructor(props) {
+interface EmojiToolbarProps {
+  onClose: () => void;
+  onSelect: (emoji: any) => void;
+  theme: 'light' | 'dark';
+  isNative?: boolean;
+}
+
+class EmojiToolbar extends React.Component<EmojiToolbarProps> {
+  constructor(props: EmojiToolbarProps) {
     super(props);
-    this.onClose = props.onClose
-    this.theme = props.theme
   }
 
-  handleClickOutside = evt => {
-    this.onClose()
+  handleClickOutside = (_evt: MouseEvent): void => {
+    this.props.onClose();
   };
 
   render() {
     return (
       <div>
-        <NimblePicker
-          onSelect={this.props.onSelect}
+        <Picker
+          onEmojiSelect={this.props.onSelect}
           autoFocus={true}
-          native={this.props.isNative}
-          set='twitter'
-          data={twitterData}
+          data={data}
           theme={this.props.theme}
+          // set="twitter"
+          skinTonePosition="search"
+          // previewPosition="none"
         />
       </div>
-    )
+    );
   }
 }
 
-export default EmojiToolbar
+export default EmojiToolbar;
