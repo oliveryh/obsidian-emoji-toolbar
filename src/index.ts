@@ -1,7 +1,7 @@
-import { App, MarkdownPostProcessor, MarkdownPreviewRenderer, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Editor } from "obsidian";
+import twemoji from '@twemoji/api';
+import { App, Editor, MarkdownPostProcessor, MarkdownPreviewRenderer, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
 import React from "react";
 import ReactDOM from "react-dom";
-import twemoji from '@twemoji/api';
 
 import EmojiToolbar from './ui/EmojiToolbar';
 
