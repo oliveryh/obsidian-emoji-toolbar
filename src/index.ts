@@ -1,7 +1,7 @@
 import { App, MarkdownPostProcessor, MarkdownPreviewRenderer, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Editor } from "obsidian";
 import React from "react";
 import ReactDOM from "react-dom";
-import twemoji from 'twemoji'
+import twemoji from '@twemoji/api';
 
 import EmojiToolbar from './ui/EmojiToolbar';
 
@@ -136,7 +136,7 @@ class SettingsTab extends PluginSettingTab {
     containerEl.createEl('h2', {text: 'Settings'})
 
     new Setting(containerEl)
-      .setName('Twitter Emoji (v13)')
+      .setName('Twitter Emoji (v16)')
       .setDesc('Improved emoji support, but may cause unexpected behavior.')
       .addToggle(toggle => toggle
         .setValue(this.plugin.settings.twitterEmojiActive)

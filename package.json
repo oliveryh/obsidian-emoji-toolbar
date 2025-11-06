@@ -32,7 +32,7 @@
     "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-scss": "^3.0.0",
     "tslib": "2.1.0",
-    "twemoji": "^13.1.0"
+    "@twemoji/api": "^16.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.13.8",
