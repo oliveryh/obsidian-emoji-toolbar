@@ -94,8 +94,6 @@ export default class EmojiPickerPlugin extends Plugin {
               if (!view){ return }
               const myModal = new EmojiModal(this.app, theme, isNative, view.editor)
               myModal.open()
-              document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].focus()
-              document.getElementsByClassName("emoji-mart-search")[0].getElementsByTagName('input')[0].select()
             }
             catch (e) {
               new Notice(e.message)
