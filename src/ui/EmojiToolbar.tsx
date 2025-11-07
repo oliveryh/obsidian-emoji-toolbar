@@ -1,6 +1,7 @@
 import * as React from "react";
-import { NimblePicker } from 'emoji-mart'
-import twitterData from 'emoji-mart/data/twitter.json'
+import twitterData from '@emoji-mart/data/sets/15/twitter.json'
+import nativeData from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 
 class EmojiToolbar extends React.Component {
@@ -17,13 +18,12 @@ class EmojiToolbar extends React.Component {
   render() {
     return (
       <div>
-        <NimblePicker
-          onSelect={this.props.onSelect}
+        <Picker
+          onEmojiSelect={this.props.onSelect}
           autoFocus={true}
-          native={this.props.isNative}
-          set='twitter'
-          data={twitterData}
+          data={this.props.isNative ? nativeData : twitterData}
           theme={this.props.theme}
+          set={this.props.isNative ? "native" : "twitter"}
         />
       </div>
     )
