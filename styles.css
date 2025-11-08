@@ -11,6 +11,10 @@ img.emoji {
   min-width: unset;
   width: unset !important;
 
+  .modal-header {
+    display: none;
+  }
+
   .modal-content {
     margin-top: 0px;
   }
