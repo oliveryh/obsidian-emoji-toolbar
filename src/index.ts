@@ -88,7 +88,7 @@ export default class EmojiPickerPlugin extends Plugin {
         if (leaf) {
           if (!checking) {
             try {
-              const theme = this.app.getTheme() === 'moonstone' ? 'light' : 'dark'
+              const theme = this.app.isDarkMode() ? 'dark' : 'light'
               const isNative = !this.settings.twitterEmojiActive
               const view = this.app.workspace.getActiveViewOfType(MarkdownView)
               if (!view){ return }
