@@ -83,7 +83,7 @@ export default class EmojiPickerPlugin extends Plugin {
       id: 'emoji-picker:open-picker',
       name: 'Open emoji picker',
       hotkeys: [],
-      checkCallback: async (checking: boolean) => {
+      checkCallback: (checking: boolean) => {
         const leaf = this.app.workspace.activeLeaf;
         if (leaf) {
           if (!checking) {
