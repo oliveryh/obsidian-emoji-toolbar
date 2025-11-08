@@ -10,18 +10,18 @@ img.emoji {
   padding: 0px;
   min-width: unset;
   width: unset !important;
-}
 
-#emoji-modal > .modal-content {
-  margin-top: 0px;
-}
+  .modal-content {
+    margin-top: 0px;
+  }
 
-#emoji-modal > button {
-  background-color: unset;
-  border: 0px !important;
-  box-shadow: 0px !important;
-}
+  .button {
+    background-color: unset;
+    border: 0px !important;
+    box-shadow: 0px !important;
+  }
 
-#emoji-modal > .modal-close-button {
-  visibility: hidden;
+  .modal-close-button {
+    visibility: hidden;
+  }
 }
