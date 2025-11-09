@@ -14,8 +14,7 @@ function insertText(editor: Editor, text: string) {
   if (text.length === 0 || text==null) return
   const cursor = editor.getCursor('from')
   editor.replaceRange(text, cursor, cursor)
-  app.commands.executeCommandById("editor:focus")
-  app.workspace.activeLeaf.view.editor.exec("goRight")
+  editor.setCursor({ line: cursor.line, ch: cursor.ch + text.length })
 }
 
 class EmojiModal extends Modal {
