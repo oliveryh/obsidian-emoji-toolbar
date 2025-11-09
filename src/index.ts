@@ -1,5 +1,5 @@
 import twemoji from '@twemoji/api';
-import { App, Editor, MarkdownPostProcessor, MarkdownPreviewRenderer, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, Editor, ItemView, MarkdownPostProcessor, MarkdownPreviewRenderer, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Workspace } from "obsidian";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -15,6 +15,19 @@ function insertText(editor: Editor, text: string) {
   const cursor = editor.getCursor('from')
   editor.replaceRange(text, cursor, cursor)
   editor.setCursor({ line: cursor.line, ch: cursor.ch + text.length })
+}
+
+function getActiveView(workspace: Workspace): MarkdownView | ItemView | undefined {
+  const markdownView = workspace.getActiveViewOfType(MarkdownView);
+  if (markdownView) {
+    console.log(markdownView)
+    return markdownView;
+  }
+  const itemView = workspace.getActiveViewOfType(ItemView);
+  if (itemView?.getViewType() === "canvas") {
+    console.log(itemView)
+    return itemView.canvas;
+  }
 }
 
 class EmojiModal extends Modal {
@@ -82,25 +95,20 @@ export default class EmojiPickerPlugin extends Plugin {
       id: 'emoji-picker:open-picker',
       name: 'Open emoji picker',
       hotkeys: [],
-      checkCallback: (checking: boolean) => {
-        const leaf = this.app.workspace.activeLeaf;
-        if (leaf) {
-          if (!checking) {
-            try {
-              const theme = this.app.isDarkMode() ? 'dark' : 'light'
-              const isNative = !this.settings.twitterEmojiActive
-              const view = this.app.workspace.getActiveViewOfType(MarkdownView)
-              if (!view){ return }
-              const myModal = new EmojiModal(this.app, theme, isNative, view.editor)
-              myModal.open()
-            }
-            catch (e) {
-              new Notice(e.message)
-            }
+      editorCheckCallback: (checking: boolean, editor: Editor) => {
+        if (!checking) {
+          try {
+            const activeView = getActiveView(this.app.workspace)
+            const theme = this.app.isDarkMode() ? 'dark' : 'light'
+            const isNative = !this.settings.twitterEmojiActive
+            if (!activeView){ return }
+            const myModal = new EmojiModal(this.app, theme, isNative, editor)
+            myModal.open()
+          } catch (e) {
+            new Notice("Error opening emoji picker: " + e.message)
           }
-          return true;
         }
-        return false;
+        return true
       }
     })
   }
