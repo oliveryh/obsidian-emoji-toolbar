@@ -118,7 +118,7 @@ export default class EmojiPickerPlugin extends Plugin {
             const myModal = new EmojiModal(this.app, theme, isNative, editor)
             myModal.open()
           } catch (e) {
-            new Notice('Error opening emoji picker: ' + e.message)
+            new Notice(`Error opening emoji picker: ${e.message}`)
           }
         }
         return true
