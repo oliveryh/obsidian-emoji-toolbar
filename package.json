@@ -15,7 +15,7 @@
   "author": "oliveryh",
   "license": "BSD-3-Clause",
   "scripts": {
-    "lint": "eslint . --ext .ts",
+    "lint": "biome lint ./src",
     "dev": "npm run lint && rollup -c -w",
     "build:nolint": "NODE_ENV=production rollup -c",
     "build": "NODE_ENV=production npm run lint && rollup -c",
