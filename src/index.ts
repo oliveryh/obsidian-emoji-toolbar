@@ -46,7 +46,6 @@ function getActiveView(workspace: Workspace): MarkdownView | ItemView | undefine
 }
 
 class EmojiModal extends Modal {
-  private div: HTMLElement
   private reactComponent: React.ReactElement
 
   constructor(app: App, theme: str, isNative: boolean, editor: Editor) {
