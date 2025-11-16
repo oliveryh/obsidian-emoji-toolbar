@@ -35,12 +35,10 @@ function insertText(editor: Editor, text: string) {
 function getActiveView(workspace: Workspace): MarkdownView | ItemView | undefined {
   const markdownView = workspace.getActiveViewOfType(MarkdownView)
   if (markdownView) {
-    console.log(markdownView)
     return markdownView
   }
   const itemView = workspace.getActiveViewOfType(ItemView)
   if (itemView?.getViewType() === 'canvas') {
-    console.log(itemView)
     return itemView.canvas
   }
 }
