@@ -39,6 +39,7 @@
     "@babel/core": "7.13.8",
     "@babel/preset-react": "7.12.13",
     "@babel/preset-typescript": "7.13.0",
+    "@biomejs/biome": "2.3.5",
     "@rollup/plugin-babel": "5.3.0",
     "@rollup/plugin-commonjs": "17.1.0",
     "@rollup/plugin-json": "^4.1.0",
