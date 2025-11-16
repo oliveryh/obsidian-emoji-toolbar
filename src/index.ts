@@ -1,9 +1,12 @@
 import twemoji from '@twemoji/api'
-import {
+import type {
   App,
   Editor,
-  ItemView,
   MarkdownPostProcessor,
+  Workspace,
+} from 'obsidian'
+import {
+  ItemView,
   MarkdownPreviewRenderer,
   MarkdownView,
   Modal,
@@ -11,7 +14,6 @@ import {
   Plugin,
   PluginSettingTab,
   Setting,
-  Workspace,
 } from 'obsidian'
 import React from 'react'
 import ReactDOM from 'react-dom'
