@@ -10,7 +10,7 @@ class EmojiToolbar extends React.Component {
     this.theme = props.theme
   }
 
-  handleClickOutside = evt => {
+  handleClickOutside = _evt => {
     this.onClose()
   }
 
