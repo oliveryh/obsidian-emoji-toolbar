@@ -15,7 +15,7 @@
   "author": "oliveryh",
   "license": "BSD-3-Clause",
   "scripts": {
-    "lint": "eslint . --ext .ts",
+    "lint": "biome lint ./src",
     "dev": "npm run lint && rollup -c -w",
     "build:nolint": "NODE_ENV=production rollup -c",
     "build": "NODE_ENV=production npm run lint && rollup -c",
@@ -25,6 +25,7 @@
   "dependencies": {
     "@emoji-mart/data": "1.2.1",
     "@emoji-mart/react": "1.1.1",
+    "@twemoji/api": "^16.0.1",
     "@types/react": "17.0.3",
     "@types/react-dom": "17.0.2",
     "emoji-mart": "5.6.0",
@@ -32,13 +33,13 @@
     "react-dom": "17.0.1",
     "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-scss": "^3.0.0",
-    "tslib": "2.1.0",
-    "@twemoji/api": "^16.0.1"
+    "tslib": "2.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.13.8",
     "@babel/preset-react": "7.12.13",
     "@babel/preset-typescript": "7.13.0",
+    "@biomejs/biome": "2.3.5",
     "@rollup/plugin-babel": "5.3.0",
     "@rollup/plugin-commonjs": "17.1.0",
     "@rollup/plugin-json": "^4.1.0",
@@ -48,10 +49,7 @@
     "@types/moment": "2.13.0",
     "@types/node": "14.14.34",
     "@types/papaparse": "5.2.5",
-    "@typescript-eslint/eslint-plugin": "4.17.0",
-    "@typescript-eslint/parser": "4.17.0",
     "babel": "6.23.0",
-    "eslint": "7.22.0",
     "obsidian": "latest",
     "rollup": "2.41.2",
     "rollup-plugin-postcss": "^4.0.2",

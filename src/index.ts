@@ -1,91 +1,99 @@
-import twemoji from '@twemoji/api';
-import { App, Editor, ItemView, MarkdownPostProcessor, MarkdownPreviewRenderer, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Workspace } from "obsidian";
-import React from "react";
-import ReactDOM from "react-dom";
+import twemoji from '@twemoji/api'
+import type {
+  App,
+  Editor,
+  MarkdownPostProcessor,
+  Workspace,
+} from 'obsidian'
+import {
+  ItemView,
+  MarkdownPreviewRenderer,
+  MarkdownView,
+  Modal,
+  Notice,
+  Plugin,
+  PluginSettingTab,
+  Setting,
+} from 'obsidian'
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-import EmojiToolbar from './ui/EmojiToolbar';
+import EmojiToolbar from './ui/EmojiToolbar'
 
-const DEF_DELAY = 1000;
+const DEF_DELAY = 1000
 function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
+  return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY))
 }
 
 function insertText(editor: Editor, text: string) {
-  if (text.length === 0 || text==null) return
+  if (text.length === 0 || text == null) return
   const cursor = editor.getCursor('from')
   editor.replaceRange(text, cursor, cursor)
   editor.setCursor({ line: cursor.line, ch: cursor.ch + text.length })
 }
 
 function getActiveView(workspace: Workspace): MarkdownView | ItemView | undefined {
-  const markdownView = workspace.getActiveViewOfType(MarkdownView);
+  const markdownView = workspace.getActiveViewOfType(MarkdownView)
   if (markdownView) {
-    console.log(markdownView)
-    return markdownView;
+    return markdownView
   }
-  const itemView = workspace.getActiveViewOfType(ItemView);
-  if (itemView?.getViewType() === "canvas") {
-    console.log(itemView)
-    return itemView.canvas;
+  const itemView = workspace.getActiveViewOfType(ItemView)
+  if (itemView?.getViewType() === 'canvas') {
+    return itemView.canvas
   }
 }
 
 class EmojiModal extends Modal {
-  private div: HTMLElement;
-  private reactComponent: React.ReactElement;
+  private reactComponent: React.ReactElement
 
   constructor(app: App, theme: str, isNative: boolean, editor: Editor) {
     super(app)
     this.reactComponent = React.createElement(EmojiToolbar, {
-      "onSelect": async (emoji) => {
+      onSelect: async emoji => {
         this.close()
         await sleep(10)
         insertText(editor, emoji.native)
       },
-      "onClose": () => {
+      onClose: () => {
         this.close()
       },
-      "theme": theme,
-      "isNative": isNative,
+      theme: theme,
+      isNative: isNative,
     })
   }
 
   async onOpen() {
     this.titleEl.empty()
     this.modalEl.id = 'emoji-modal'
-    const { contentEl } = this;
+    const { contentEl } = this
     ReactDOM.render(this.reactComponent, contentEl)
   }
 
   onClose() {
-    const { contentEl } = this;
-    contentEl.empty();
+    const { contentEl } = this
+    contentEl.empty()
   }
 }
 
 interface MyPluginSettings {
-  twitterEmojiActive: boolean;
+  twitterEmojiActive: boolean
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  twitterEmojiActive: false
+  twitterEmojiActive: false,
 }
 
 export default class EmojiPickerPlugin extends Plugin {
+  settings: MyPluginSettings
 
-  settings: MyPluginSettings;
-
-  public static postprocessor: MarkdownPostProcessor = (
-    el: HTMLElement,
-  ) => {
+  public static postprocessor: MarkdownPostProcessor = (el: HTMLElement) => {
     twemoji.parse(el)
   }
 
   async onload(): Promise<void> {
-
     await this.loadSettings()
 
-    this.addSettingTab(new SettingsTab(this.app, this));
+    this.addSettingTab(new SettingsTab(this.app, this))
 
     if (this.settings.twitterEmojiActive) {
       MarkdownPreviewRenderer.registerPostProcessor(EmojiPickerPlugin.postprocessor)
@@ -101,33 +109,35 @@ export default class EmojiPickerPlugin extends Plugin {
             const activeView = getActiveView(this.app.workspace)
             const theme = this.app.isDarkMode() ? 'dark' : 'light'
             const isNative = !this.settings.twitterEmojiActive
-            if (!activeView){ return }
+            if (!activeView) {
+              return
+            }
             const myModal = new EmojiModal(this.app, theme, isNative, editor)
             myModal.open()
           } catch (e) {
-            new Notice("Error opening emoji picker: " + e.message)
+            new Notice(`Error opening emoji picker: ${e.message}`)
           }
         }
         return true
-      }
+      },
     })
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
   }
 
   async saveSettings() {
-    await this.saveData(this.settings);
+    await this.saveData(this.settings)
   }
 }
 
 class SettingsTab extends PluginSettingTab {
-  plugin: EmojiPickerPlugin;
+  plugin: EmojiPickerPlugin
 
   constructor(app: App, plugin: EmojiPickerPlugin) {
-    super(app, plugin);
-    this.plugin = plugin;
+    super(app, plugin)
+    this.plugin = plugin
   }
 
   display(): void {
@@ -135,17 +145,16 @@ class SettingsTab extends PluginSettingTab {
 
     containerEl.empty()
 
-    containerEl.createEl('h1', {text: 'Emoji Toolbar'})
-    containerEl.createEl('a', {text: 'Created by oliveryh', href: 'https://github.com/oliveryh/'})
+    containerEl.createEl('h1', { text: 'Emoji Toolbar' })
+    containerEl.createEl('a', { text: 'Created by oliveryh', href: 'https://github.com/oliveryh/' })
 
-    containerEl.createEl('h2', {text: 'Settings'})
+    containerEl.createEl('h2', { text: 'Settings' })
 
     new Setting(containerEl)
       .setName('Twitter Emoji (v16)')
       .setDesc('Improved emoji support, but may cause unexpected behavior.')
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.twitterEmojiActive)
-        .onChange(async (value) => {
+      .addToggle(toggle =>
+        toggle.setValue(this.plugin.settings.twitterEmojiActive).onChange(async value => {
           this.plugin.settings.twitterEmojiActive = value
           await this.plugin.saveSettings()
           if (value) {
@@ -153,6 +162,7 @@ class SettingsTab extends PluginSettingTab {
           } else {
             MarkdownPreviewRenderer.unregisterPostProcessor(EmojiPickerPlugin.postprocessor)
           }
-        }));
+        }),
+      )
   }
 }
