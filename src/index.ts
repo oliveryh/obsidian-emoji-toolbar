@@ -3,10 +3,8 @@ import type {
   App,
   Editor,
   MarkdownPostProcessor,
-  Workspace,
 } from 'obsidian'
 import {
-  ItemView,
   MarkdownPreviewRenderer,
   MarkdownView,
   Modal,
@@ -32,27 +30,73 @@ function insertText(editor: Editor, text: string) {
   editor.setCursor({ line: cursor.line, ch: cursor.ch + text.length })
 }
 
-function getActiveView(workspace: Workspace): MarkdownView | ItemView | undefined {
-  const markdownView = workspace.getActiveViewOfType(MarkdownView)
-  if (markdownView) {
-    return markdownView
+/** Selection context captured when the command is run in `.inline-title`. */
+interface InlineTitleTarget {
+  element: HTMLElement
+  range: Range | null
+}
+
+function getInlineTitleTarget(): InlineTitleTarget | null {
+  const active = document.activeElement as HTMLElement | null
+  const titleEl = active?.closest('.inline-title') as HTMLElement | null
+  if (!titleEl) return null
+
+  const selection = window.getSelection()
+  if (selection?.rangeCount) {
+    const range = selection.getRangeAt(0)
+    if (titleEl.contains(range.commonAncestorContainer)) {
+      return { element: titleEl, range: range.cloneRange() }
+    }
   }
-  const itemView = workspace.getActiveViewOfType(ItemView)
-  if (itemView?.getViewType() === 'canvas') {
-    return itemView.canvas
+
+  return { element: titleEl, range: null }
+}
+
+function insertIntoInlineTitle(target: InlineTitleTarget, text: string) {
+  if (text.length === 0 || text == null) return
+  const el = target.element
+  if (!el.isConnected) return
+  el.focus()
+  const selection = window.getSelection()
+  if (!selection) return
+
+  
+  const cursor = target.range?.cloneRange() ?? document.createRange()
+  if (!target.range) {
+    cursor.selectNodeContents(el)
+    cursor.collapse(false)
   }
+
+  cursor.deleteContents()
+  const textNode = document.createTextNode(text)
+  cursor.insertNode(textNode)
+  cursor.setStartAfter(textNode)
+  cursor.collapse(true)
+  selection.removeAllRanges()
+  selection.addRange(cursor)
+  el.dispatchEvent(new Event('input', { bubbles: true }))
 }
 
 class EmojiModal extends Modal {
   private reactComponent: React.ReactElement
 
-  constructor(app: App, theme: str, isNative: boolean, editor: Editor) {
+  constructor(
+    app: App,
+    theme: string,
+    isNative: boolean,
+    editor: Editor | null,
+    titleTarget: InlineTitleTarget | null,
+  ) {
     super(app)
     this.reactComponent = React.createElement(EmojiToolbar, {
-      onSelect: async emoji => {
+      onSelect: async (emoji: { native: string }) => {
         this.close()
         await sleep(10)
-        insertText(editor, emoji.native)
+        if (titleTarget) {
+          insertIntoInlineTitle(titleTarget, emoji.native)
+        } else if (editor) {
+          insertText(editor, emoji.native)
+        }
       },
       onClose: () => {
         this.close()
@@ -103,16 +147,21 @@ export default class EmojiPickerPlugin extends Plugin {
       id: 'emoji-picker:open-picker',
       name: 'Open emoji picker',
       hotkeys: [],
-      editorCheckCallback: (checking: boolean, editor: Editor) => {
+      checkCallback: (checking: boolean) => {
+        const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView)
+        if (!markdownView?.editor) return false
         if (!checking) {
           try {
-            const activeView = getActiveView(this.app.workspace)
             const theme = this.app.isDarkMode() ? 'dark' : 'light'
             const isNative = !this.settings.twitterEmojiActive
-            if (!activeView) {
-              return
-            }
-            const myModal = new EmojiModal(this.app, theme, isNative, editor)
+            const titleTarget = getInlineTitleTarget()
+            const myModal = new EmojiModal(
+              this.app,
+              theme,
+              isNative,
+              titleTarget ? null : markdownView.editor,
+              titleTarget,
+            )
             myModal.open()
           } catch (e) {
             new Notice(`Error opening emoji picker: ${e.message}`)
