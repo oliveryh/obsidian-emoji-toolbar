@@ -22,7 +22,7 @@ import EmojiToolbar from './ui/EmojiToolbar'
 
 const DEF_DELAY = 1000
 function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY))
+  return new Promise(resolve => activeWindow.setTimeout(resolve, ms || DEF_DELAY))
 }
 
 function insertText(editor: Editor, text: string) {
