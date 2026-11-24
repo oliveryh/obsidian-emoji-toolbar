@@ -144,10 +144,9 @@ class SettingsTab extends PluginSettingTab {
 
     containerEl.empty()
 
-    containerEl.createEl('h1', { text: 'Emoji Toolbar' })
     containerEl.createEl('a', { text: 'Created by oliveryh', href: 'https://github.com/oliveryh/' })
 
-    containerEl.createEl('h2', { text: 'Settings' })
+    new Setting(containerEl).setName('Settings').setHeading()
 
     new Setting(containerEl)
       .setName('Twitter Emoji (v16)')
