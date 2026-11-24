@@ -16,7 +16,7 @@ export default {
   },
   external: ["obsidian", "fs", "os", "path"],
   plugins: [
-    typescript(),
+    typescript({ outDir: "." }),
     resolve({
       browser: true,
     }),
