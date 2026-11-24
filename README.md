@@ -26,6 +26,12 @@ Start typing a word to filter through the list. You can insert the emoji into th
 3. Click on Community plugins "Browse"
 4. Look for Emoji
 
+## Network use
+
+By default, Emoji Toolbar makes no network requests; the emoji picker and its data are bundled with the plugin.
+
+If you enable **Twitter Emoji** in the plugin settings, emoji images are loaded from the [jsDelivr](https://www.jsdelivr.com/) CDN (`cdn.jsdelivr.net`) in both the picker and reading view. The only information sent is the standard request metadata (such as your IP address) that comes with any image request. No note content, vault data or telemetry is sent. Turning the setting off stops these requests.
+
 # Thanks
 
 - A big thanks to liamcain for producing the [obsidian-react-starter](https://github.com/obsidian-community/obsidian-react-starter
