@@ -144,8 +144,6 @@ class SettingsTab extends PluginSettingTab {
 
     containerEl.empty()
 
-    new Setting(containerEl).setName('Settings').setHeading()
-
     new Setting(containerEl)
       .setName('Twitter Emoji (v16)')
       .setDesc('Improved emoji support, but may cause unexpected behavior.')
