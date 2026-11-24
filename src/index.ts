@@ -144,8 +144,6 @@ class SettingsTab extends PluginSettingTab {
 
     containerEl.empty()
 
-    containerEl.createEl('a', { text: 'Created by oliveryh', href: 'https://github.com/oliveryh/' })
-
     new Setting(containerEl).setName('Settings').setHeading()
 
     new Setting(containerEl)
