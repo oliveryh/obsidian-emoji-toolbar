@@ -102,7 +102,6 @@ export default class EmojiPickerPlugin extends Plugin {
     this.addCommand({
       id: 'emoji-picker:open-picker',
       name: 'Open emoji picker',
-      hotkeys: [],
       editorCheckCallback: (checking: boolean, editor: Editor) => {
         if (!checking) {
           try {
