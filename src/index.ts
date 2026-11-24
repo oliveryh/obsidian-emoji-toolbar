@@ -71,6 +71,7 @@ class EmojiModal extends Modal {
 
   onClose() {
     const { contentEl } = this
+    ReactDOM.unmountComponentAtNode(contentEl)
     contentEl.empty()
   }
 }
