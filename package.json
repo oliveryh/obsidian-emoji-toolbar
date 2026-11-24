@@ -28,8 +28,7 @@
     "@twemoji/api": "^16.0.1",
     "emoji-mart": "5.6.0",
     "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "tslib": "2.1.0"
+    "react-dom": "17.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.13.8",
@@ -42,12 +41,13 @@
     "@rollup/plugin-node-resolve": "11.2.0",
     "@rollup/plugin-replace": "2.4.1",
     "@rollup/plugin-typescript": "8.2.0",
-    "@types/node": "14.14.34",
+    "@types/node": "22.20.5",
     "@types/react": "17.0.3",
     "@types/react-dom": "17.0.2",
     "obsidian": "latest",
     "rollup": "2.41.2",
     "rollup-plugin-import-css": "^3.0.2",
-    "typescript": "4.2.3"
+    "tslib": "2.9.1",
+    "typescript": "5.9.3"
   }
 }
