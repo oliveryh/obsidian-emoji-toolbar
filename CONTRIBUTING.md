@@ -46,6 +46,22 @@ npm ci
 - Prefer small, atomic commits. Commit messages in this repo use a leading [gitmoji](https://gitmoji.dev/) followed by a conventional type, for example `:bug: fix: unmount react tree when the modal closes`.
 - Describe what changed and how you tested it. If the change affects what users see, say which platforms you tried.
 
+## Releasing (maintainers)
+
+Releases are built from source by the [Release workflow](.github/workflows/release.yml); don't upload `main.js` by hand.
+
+1. Bump the version in a pull request, without a `v` prefix:
+   - `npm version <x.y.z> --no-git-tag-version` (updates `package.json` and `package-lock.json`)
+   - set the same `version` in `manifest.json`
+   - add `"<x.y.z>": "<minAppVersion>"` to `versions.json`
+2. Merge to `main`, then tag the merge commit with the exact version and push the tag:
+   ```sh
+   git tag <x.y.z>
+   git push origin <x.y.z>
+   ```
+3. The workflow checks the tag matches `manifest.json`, `package.json` and `versions.json`, runs `npm ci` and `npm run build`, attests build provenance for `main.js`, `manifest.json` and `styles.css`, and creates a **draft** release.
+4. Review the draft release notes and assets on GitHub, then publish it.
+
 ## License
 
 By contributing, you agree that your contributions will be licensed under the [BSD-3-Clause license](LICENSE).
