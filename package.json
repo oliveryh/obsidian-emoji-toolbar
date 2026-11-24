@@ -45,7 +45,6 @@
     "@types/node": "14.14.34",
     "@types/react": "17.0.3",
     "@types/react-dom": "17.0.2",
-    "babel": "6.23.0",
     "obsidian": "latest",
     "rollup": "2.41.2",
     "rollup-plugin-import-css": "^3.0.2",
