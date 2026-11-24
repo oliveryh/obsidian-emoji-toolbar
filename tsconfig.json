@@ -8,6 +8,8 @@
     "module": "ESNext",
     "target": "esnext",
     "allowJs": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
     "importHelpers": true,

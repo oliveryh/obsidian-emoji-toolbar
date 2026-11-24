@@ -16,9 +16,10 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "lint": "biome lint ./src",
+    "typecheck": "tsc --noEmit",
     "dev": "npm run lint && rollup -c -w",
     "build:nolint": "NODE_ENV=production rollup -c",
-    "build": "npm run lint && NODE_ENV=production rollup -c",
+    "build": "npm run lint && npm run typecheck && NODE_ENV=production rollup -c",
     "test": "jest",
     "test:watch": "yarn test -- --watch"
   },
