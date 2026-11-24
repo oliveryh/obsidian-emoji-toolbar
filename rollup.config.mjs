@@ -22,8 +22,10 @@ export default {
     }),
     replace({
       "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
+      preventAssignment: true,
     }),
     babel({
+      babelHelpers: "bundled",
       presets: ["@babel/preset-react", "@babel/preset-typescript"],
     }),
     commonjs(),
