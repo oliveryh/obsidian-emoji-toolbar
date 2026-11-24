@@ -1,0 +1,70 @@
+name: Release
+
+# Pushing a version tag (for example `1.0.1`) builds the plugin from source,
+# attests build provenance for the release assets and creates a DRAFT release.
+# Review the draft on GitHub, then publish it manually.
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the draft release and upload assets
+      id-token: write # sign build provenance attestations
+      attestations: write # store build provenance attestations
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24 # LTS
+          cache: npm
+
+      - name: Check tag matches plugin version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          manifest_version=$(node -p "require('./manifest.json').version")
+          package_version=$(node -p "require('./package.json').version")
+          versions_has_tag=$(node -p "Object.hasOwn(require('./versions.json'), process.env.TAG)")
+          echo "tag=$TAG manifest=$manifest_version package=$package_version versions.json has tag=$versions_has_tag"
+          if [ "$manifest_version" != "$TAG" ] || [ "$package_version" != "$TAG" ] || [ "$versions_has_tag" != "true" ]; then
+            echo "::error::Tag $TAG must match manifest.json and package.json versions, and have an entry in versions.json"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
+
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --draft \
+            --verify-tag \
+            --title "$TAG" \
+            --generate-notes \
+            main.js manifest.json styles.css
