@@ -22,7 +22,7 @@ import EmojiToolbar from './ui/EmojiToolbar'
 
 const DEF_DELAY = 1000
 function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY))
+  return new Promise(resolve => activeWindow.setTimeout(resolve, ms || DEF_DELAY))
 }
 
 function insertText(editor: Editor, text: string) {
@@ -75,16 +75,16 @@ class EmojiModal extends Modal {
   }
 }
 
-interface MyPluginSettings {
+interface EmojiToolbarSettings {
   twitterEmojiActive: boolean
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: EmojiToolbarSettings = {
   twitterEmojiActive: false,
 }
 
 export default class EmojiPickerPlugin extends Plugin {
-  settings: MyPluginSettings
+  settings: EmojiToolbarSettings
 
   public static postprocessor: MarkdownPostProcessor = (el: HTMLElement) => {
     twemoji.parse(el)
@@ -102,7 +102,6 @@ export default class EmojiPickerPlugin extends Plugin {
     this.addCommand({
       id: 'emoji-picker:open-picker',
       name: 'Open emoji picker',
-      hotkeys: [],
       editorCheckCallback: (checking: boolean, editor: Editor) => {
         if (!checking) {
           try {
@@ -112,8 +111,8 @@ export default class EmojiPickerPlugin extends Plugin {
             if (!activeView) {
               return
             }
-            const myModal = new EmojiModal(this.app, theme, isNative, editor)
-            myModal.open()
+            const modal = new EmojiModal(this.app, theme, isNative, editor)
+            modal.open()
           } catch (e) {
             new Notice(`Error opening emoji picker: ${e.message}`)
           }
@@ -145,10 +144,9 @@ class SettingsTab extends PluginSettingTab {
 
     containerEl.empty()
 
-    containerEl.createEl('h1', { text: 'Emoji Toolbar' })
     containerEl.createEl('a', { text: 'Created by oliveryh', href: 'https://github.com/oliveryh/' })
 
-    containerEl.createEl('h2', { text: 'Settings' })
+    new Setting(containerEl).setName('Settings').setHeading()
 
     new Setting(containerEl)
       .setName('Twitter Emoji (v16)')
