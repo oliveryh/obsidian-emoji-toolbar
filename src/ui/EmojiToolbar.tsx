@@ -3,15 +3,20 @@ import twitterData from '@emoji-mart/data/sets/15/twitter.json'
 import nativeData from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 
-class EmojiToolbar extends React.Component {
-  constructor(props) {
-    super(props)
-    this.onClose = props.onClose
-    this.theme = props.theme
-  }
+export interface EmojiSelection {
+  native: string
+}
 
-  handleClickOutside = _evt => {
-    this.onClose()
+export interface EmojiToolbarProps {
+  onSelect: (emoji: EmojiSelection) => void | Promise<void>
+  onClose: () => void
+  theme: 'light' | 'dark'
+  isNative: boolean
+}
+
+class EmojiToolbar extends React.Component<EmojiToolbarProps> {
+  handleClickOutside = (_evt: unknown) => {
+    this.props.onClose()
   }
 
   render() {

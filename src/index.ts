@@ -18,7 +18,7 @@ import {
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import EmojiToolbar from './ui/EmojiToolbar'
+import EmojiToolbar, { type EmojiSelection } from './ui/EmojiToolbar'
 
 const DEF_DELAY = 1000
 function sleep(ms: number) {
@@ -39,17 +39,18 @@ function getActiveView(workspace: Workspace): MarkdownView | ItemView | undefine
   }
   const itemView = workspace.getActiveViewOfType(ItemView)
   if (itemView?.getViewType() === 'canvas') {
-    return itemView.canvas
+    // `canvas` is not part of Obsidian's public API; it is only used as a truthy marker that a canvas is active.
+    return (itemView as ItemView & { canvas?: ItemView }).canvas
   }
 }
 
 class EmojiModal extends Modal {
   private reactComponent: React.ReactElement
 
-  constructor(app: App, theme: str, isNative: boolean, editor: Editor) {
+  constructor(app: App, theme: 'light' | 'dark', isNative: boolean, editor: Editor) {
     super(app)
     this.reactComponent = React.createElement(EmojiToolbar, {
-      onSelect: async emoji => {
+      onSelect: async (emoji: EmojiSelection) => {
         this.close()
         await sleep(10)
         insertText(editor, emoji.native)
@@ -85,7 +86,7 @@ const DEFAULT_SETTINGS: EmojiToolbarSettings = {
 }
 
 export default class EmojiPickerPlugin extends Plugin {
-  settings: EmojiToolbarSettings
+  settings: EmojiToolbarSettings = { ...DEFAULT_SETTINGS }
 
   public static postprocessor: MarkdownPostProcessor = (el: HTMLElement) => {
     twemoji.parse(el)
