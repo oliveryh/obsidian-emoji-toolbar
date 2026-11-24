@@ -75,16 +75,16 @@ class EmojiModal extends Modal {
   }
 }
 
-interface MyPluginSettings {
+interface EmojiToolbarSettings {
   twitterEmojiActive: boolean
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: EmojiToolbarSettings = {
   twitterEmojiActive: false,
 }
 
 export default class EmojiPickerPlugin extends Plugin {
-  settings: MyPluginSettings
+  settings: EmojiToolbarSettings
 
   public static postprocessor: MarkdownPostProcessor = (el: HTMLElement) => {
     twemoji.parse(el)
@@ -111,8 +111,8 @@ export default class EmojiPickerPlugin extends Plugin {
             if (!activeView) {
               return
             }
-            const myModal = new EmojiModal(this.app, theme, isNative, editor)
-            myModal.open()
+            const modal = new EmojiModal(this.app, theme, isNative, editor)
+            modal.open()
           } catch (e) {
             new Notice(`Error opening emoji picker: ${e.message}`)
           }
